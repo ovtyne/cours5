@@ -1,17 +1,36 @@
-
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from src.hh import HeadHunter, Connector
+from src.db import DBManager
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+8 to toggle the breakpoint.
+def main():
+    vacancies_json = []
+    keyword = input('Введите ключевое слово для поиска: ')
+
+    hh = HeadHunter(keyword)
+    for api in (hh,):
+        api.get_vacancies(pages_count=10)
+        vacancies_json.extend(api.get_formatted_vacancies())
+
+    connector = Connector(keyword=keyword, vacancies_json=vacancies_json)
+
+    while True:
+        command = input(
+            '1 - Вывести список вакансий;\n'
+            'exit - Выход;\n'
+        )
+        if command.lower() == 'exit':
+            break
+        elif command == '1':
+            vacancies = connector.select()
+
+        for vacancy in vacancies:
+            print(vacancy, end='\n\n')
 
 
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    db = DBManager()
+    db.create_tables()
+    db.get_vacancies_with_higher_salary()
+    db.get_avg_salary()
+    db.get_companies_and_vacancies_count()
+    main()
