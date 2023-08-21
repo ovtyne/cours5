@@ -8,7 +8,7 @@ class ParsingError(Exception):
 
 
 class Vacancy:
-    """Создание класса вакансия, так как изменение аттрибутов не предвидится, используем слоты"""
+    """Класс вакансий"""
     __slots__ = ('id', 'title', 'url', 'salary_from', 'salary_to', 'employer', 'api')
 
     def __init__(self, vacancy_id, title, url, salary_from, salary_to, employer, api):
@@ -21,7 +21,7 @@ class Vacancy:
         self.api = api
 
     def __gt__(self, other):
-        """Сравнение различных вакансий по зарплате """
+        """Сравнение вакансий по зарплате """
         if not other.salary_from:
             return True
         elif not self.salary_from:
@@ -29,7 +29,7 @@ class Vacancy:
         return self.salary_from >= other.salary_from
 
     def __str__(self):
-        """ Проверка в строковом представлении наличия минимального порога и максимального потолка зарплат"""
+        """ Проверка минимального порога и максимального потолка зарплат"""
         salary_from = f'От {self.salary_from}' if self.salary_from else ''
         salary_to = f'До {self.salary_to}' if self.salary_to else ''
         if self.salary_from is None and self.salary_to is None:
@@ -39,7 +39,7 @@ class Vacancy:
 
 
 class HeadHunter:
-    """ Создание класса  HeadHunter, задание параметров вывода"""
+    """ Класс  HeadHunter"""
 
     def __init__(self, keyword):
         self.__header = {
@@ -53,7 +53,7 @@ class HeadHunter:
 
     @staticmethod
     def get_salary(salary):
-        """ Изменение зарплат в случае изпользования евро"""
+        """ Изменение зарплат если в евро"""
         formatted_salary = [None, None]
         if salary and salary['from'] and salary['from'] != 0:
             formatted_salary[0] = salary['from'] if salary['currency'].lower() == 'rur' else salary['from'] * 80
@@ -88,16 +88,19 @@ class HeadHunter:
 
     def get_vacancies(self, pages_count=1):
         """ Перебор вакансий в цикле согласно количеству переопределенных в main страниц"""
+        print(f"Парсинг страниц HeadHunter")
+        vac_count = 0
         while self.__params['page'] < pages_count:
-            print(f"HeadHunter, Парсинг страницы {self.__params['page'] + 1}", end=": ")
             try:
                 values = self.get_request()
             except ParsingError:
                 print('Ошибка получения данных')
                 break
-            print(f'Найдено ({len(values)}) вакансий.')
+            vac_count += len(values)
             self.__vacancies.extend(values)
             self.__params['page'] += 1
+
+        print(f'Найдено {vac_count} вакансий.')
 
 
 class Connector:

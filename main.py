@@ -13,16 +13,9 @@ def main():
 
     connector = Connector(keyword=keyword, vacancies_json=vacancies_json)
 
-    while True:
-        command = input(
-            '1 - Вывести список вакансий;\n'
-            'exit - Выход;\n'
-        )
-        if command.lower() == 'exit':
-            break
-        elif command == '1':
-            vacancies = connector.select()
-
+    command = input('Вывести список вакансий? (д/н)\n')
+    if command.lower() in ['y', 'д']:
+        vacancies = connector.select()
         for vacancy in vacancies:
             print(vacancy, end='\n\n')
 
