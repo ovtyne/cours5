@@ -1,14 +1,13 @@
 [tool.poetry]
-name = "cours5"
+name = "course5"
 version = "0.1.0"
 description = ""
-authors = ["ovto <ovtyne@gmail.com>"]
+authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
 requests = "^2.31.0"
-psycopg2 = "^2.9.7"
 
 
 [build-system]
