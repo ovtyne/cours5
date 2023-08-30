@@ -1,5 +1,5 @@
 import time
-import requests as requests
+import requests
 
 
 class HeadHunter:
@@ -41,11 +41,13 @@ class HeadHunter:
         while True:
             self.params['page'] = cur_page
             result = self.get_request()
+            if result is None:
+                continue
             for item in result.get('items'):
                 all_vacancies.append(self.get_content(item))
             cur_page += 1
+            if cur_page > 5:
+                break
             time.sleep(0.2)
 
-            if result.get('pages') == cur_page:
-                break
         return all_vacancies
